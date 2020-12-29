@@ -127,4 +127,57 @@ describe('autoSql parser', () => {
    `
     expect(parser.parse(s1)).toMatchSnapshot()
   })
+
+  it('pli', () => {
+    const s1 = `table pliMetrics
+"bed12+5 for displaying gnomAD haploinsufficiency prediction scores"
+    (
+    string chrom;      "Reference sequence chromosome or scaffold"
+    uint   chromStart; "Start position in chromosome"
+    uint   chromEnd;   "End position in chromosome"
+    string name;       "ENST or ENSG Name"
+    uint   score;      "pLI score between 0-1000, or  -1 for NA"
+    char[1] strand;    "strand of transcript"
+    uint thickStart;   "Start of where display is thick"
+    uint thickEnd;     "End of where display should be thick"
+    uint itemRgb;    "Color of item"
+    int blockCount;   "Number of exons"
+    int[blockCount] blockSizes;  "Size of each exon"
+    int[blockCount] chromStarts; "0-based start position of each exon"
+    string _mouseOver;  "Mouseover label"
+    float _pli;         "pLI value for filters"
+    string geneName;   "Gene symbol"
+    string synonymous; "Synonymous metrics"
+    string missense;   "Missense metrics"
+    string pLoF;       "Predicted Loss of Function metrics"
+    )`
+    expect(parser.parse(s1)).toMatchSnapshot()
+  })
+
+  // seen in https://hgdownload.soe.ucsc.edu/gbdb/hg38/clinvarSubLolly/clinvarSubLolly.bb
+  test('comment', () => {
+    const table = `table clinsub
+"Clinvar Submissions"
+    (
+    #bed 9
+    string chrom;      "Chromosome (or contig, scaffold, etc.)"
+    uint   chromStart; "Start position in chromosome"
+    uint   chromEnd;   "End position in chromosome"
+    string name;       "Name of item"
+    uint   score;      "Score from 0-1000"
+    char[1] strand;    "+ or -"
+    uint thickStart;   "Start of where display should be thick (start codon)"
+    uint thickEnd;     "End of where display should be thick (stop codon)"
+    uint reserved;     "Used as itemRgb as of 2004-11-22"
+
+    #extra fields
+    uint lollySize;    "Size of lollipop"
+    lstring changes;     "changes
+    lstring variantIds;     "variantIds
+    lstring subIds;     "subIds
+    lstring _mouseOver;     "mouseOver"
+    )`
+
+    expect(parser.parse(table)).toMatchSnapshot()
+  })
 })
